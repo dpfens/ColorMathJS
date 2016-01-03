@@ -252,9 +252,12 @@ Color.prototype.toHsl= function(r,g,b,a){
 	b = b || this.b,
 	a = a || this.a || 1;
 	
-    r = r/255 || 0, g = g/255 || 0, b = b/255 ||0;
-    var max = Math.max(r, g, b), min = Math.min(r, g, b);
-    var h, s, l = (max + min) / 2;
+    r = r/255 || 0,
+    g = g/255 || 0,
+    b = b/255 || 0;
+    Math.max(r, g, b),
+    min = Math.min(r, g, b),
+    h, s, l = (max + min) / 2;
 
     if(max == min){
         h = s = 0; // achromatic
@@ -357,7 +360,7 @@ Color.prototype.toHex = function(r,g,b){
 	b = b || this.b;
     bin = r << 16 | g << 8 | b;
     return (function(h){
-        return new Array(7-h.length).join("0")+h
+        return '#'+ new Array(7-h.length).join("0")+h
     })(bin.toString(16).toUpperCase())
 }
 
