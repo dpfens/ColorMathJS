@@ -1,32 +1,80 @@
 <html>
 	<head>
-		<link rel="stylesheet" href="css/foundation.min.css" />
+		<link rel="stylesheet" href="css/foundation.css" />
 		<link rel="stylesheet" href="css/prism.css" />
 		<link rel="stylesheet" href="css/index.css" />
+		<title>ColorMathJS</title>
 	</head>
 	
 	<body>
-		<header>
-			<nav>
-			</nav>
+		<canvas id="logo"></canvas>
+		<header class="top-bar">
+			<ul class="vertical medium-horizontal menu icon-top top-bar-left">
+				<li><a href="index.html">Home</a></li>
+			</ul>
+			<ul class="vertical medium-horizontal menu icon-top top-bar-right">
+				<li><a href="docs.html">Docs</a></li>
+				<li><a href="tool.html">Tool</a></li>
+			</ul>
 		</header>
 		<section>
-			<div class="visual" ng-controller="visualController">
+			<p class="tag-line text-center">A small utility library to easily run operations on web colors</p>
+			<p class="text-center">9 KB minified, only 4KB when gzipped</p>
+			
+			
+			<div class="medium-12 columns">
+				<div class="medium-5 columns">
+					<h3>Conversions</h3>
+					<p>Easily convert RGB, HSL, Hex, CSS Colornames, and CMYK colors into your preferred formats</p>
+				</div>
+				
+				<div class="medium-7 columns">
+					<pre><code class="language-javascript">var blueViolet = new Color("blueviolet"),
+chartreuse = new Color("#7fff00"),
+chocolate = new Color(210,105,30);
+
+blueViolet.toHsl(); // [0.7531876138433516, 0.7593360995850621, 0.5274509803921569, 1]
+chartreuse.toCmyk(); // [0.5,0,1,0]
+chocolate.toHex(); // #D2691E</code></pre>
+				
+				</div>
 			
 			</div>
 			
-			<form ng-controller="inputController">
+			<div class="medium-12 columns">
+				<div class="medium-5 columns">
+					<h3>Math Operations</h3>
+					<p>Add, subtract, multiply, or divide color values.  Or run more complex operations on values</p>
+				</div>
+				
+				<div class="medium-7 columns">
+					<pre><code class="language-javascript">var sum = blueViolet.add(chocolate), // {r: 255, g: 148, b: 255, a: 1}
+difference = blueViolet.subtract(chocolate), // {r: 0, g: 0, b: 196, a: 1}
+product = blueViolet.multiply(1.5), // {r: 207, g: 65, b: 255, a: 1}
+dividend = blueViolet.divide(1.5); // {r: 69, g: 22, b: 113, a: 1}</code></pre>
+				</div>
 			
-			</form>
+			</div>
 			
-			<pre ng-controller="outputController">
+			<div class="medium-12 columns">
+				<div class="medium-5 columns">
+					<h3>Blending & Gradients</h3>
+					<p>Blend colors and create multi-step gradients between colors</p>
+				</div>
+				
+				<div class="medium-7 columns">
+					<pre><code class="language-javascript">var gradient = chartreuse.steps(chocolate,10), // [10 x Color]
+blend = chartreuse.blend(blueViolet,0.5) // {r: 133, g: 149, b: 113, a: 1}
+</code></pre>
+				</div>
 			
-			</pre>
-		
+			</div>
+			
 		</section>
 	</body>
 	<script src="js/lib/jquery-2.1.4.min.js"></script>
 	<script src="js/lib/foundation.min.js"></script>
 	<script src="js/lib/prism.js"></script>
+	<script src="colormath.js"></script>
 	<script src="js/index.js"></script>
 </html>
