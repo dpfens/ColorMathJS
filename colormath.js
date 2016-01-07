@@ -252,12 +252,12 @@ Color.prototype.toHsl= function(r,g,b,a){
 	b = b || this.b,
 	a = a || this.a || 1;
 	
-    r = r/255 || 0,
-    g = g/255 || 0,
-    b = b/255 || 0;
-    Math.max(r, g, b),
-    min = Math.min(r, g, b),
-    h, s, l = (max + min) / 2;
+	r = r/255 || 0,
+	g = g/255 || 0,
+	b = b/255 || 0,
+    max = Math.max(r, g, b),
+    min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
 
     if(max == min){
         h = s = 0; // achromatic
@@ -269,13 +269,13 @@ Color.prototype.toHsl= function(r,g,b,a){
             case g: h = (b - r) / d + 2; break;
             case b: h = (r - g) / d + 4; break;
         }
-        h /= 6;
+        h *= 60;
     }
 
     return [h,s,l,a];
 }
 
-Color.prototype.cmykToRgb =function(c,m,y,k){
+Color.prototype.cmykToRgb = function(c,m,y,k){
  
 		c = c / 100;
 		m = m / 100;
@@ -286,9 +286,9 @@ Color.prototype.cmykToRgb =function(c,m,y,k){
 		g = 1 - Math.min( 1, m * ( 1 - k ) + k ),
 		b = 1 - Math.min( 1, y * ( 1 - k ) + k );
  
-		r = Math.round( result.r * 255 );
-		g = Math.round( result.g * 255 );
-		b = Math.round( result.b * 255 );
+		r = Math.round(r * 255 );
+		g = Math.round(g * 255 );
+		b = Math.round(b * 255 );
  
 		return [r,g,b];
 	}
@@ -382,8 +382,9 @@ Color.prototype.blend = function(rgb, percentage) {
 Color.prototype.steps = function(rgb, steps) {
 	var gradient = [], color;
 	steps = steps || 2;
-	steps += 1;
-	for(var percentage = i = 1/steps; percentage<1; percentage += i) {
+	steps +=1;
+	for(var percentage = i = 1/steps; percentage<0.99999; percentage += i) {
+		console.log(percentage);
 		color = Color.prototype.blend.call(this,rgb, percentage);
 		gradient.push(color);
 	}
@@ -410,11 +411,12 @@ Color.prototype.add = function() {
 	var sum = [this.r, this.g, this.b, this.a], color;
 	for(var i = 0; i<arguments.length; i++) {
 		color = arguments[i];
-		sum[0] += color.r || color;
-		sum[1] += color.g || color;
-		sum[2] += color.b || color;
-		sum[3] += color.a || (color/10);
+		color = ( color instanceof Color)? color : {r:color,g:color,b:color};
+		sum[0] += color.r;
+		sum[1] += color.g;
+		sum[2] += color.b;
 	}
+	console.log(sum);
 	newSum = new Color(sum);
 	newSum._normalize(newSum);
 	return newSum;
@@ -424,10 +426,10 @@ Color.prototype.subtract = function() {
 	var minuend = [this.r, this.g,this.b,this.a], difference, color;
 	for(var i =0; i<arguments.length; i++) {
 		color = arguments[i];
-		minuend[0] -= color.r || color;
-		minuend[1] -= color.g || color;
-		minuend[2] -= color.b || color;
-		minuend[3] -= color.a || (color/10);
+		color = ( color instanceof Color)? color : {r:color,g:color,b:color};
+		minuend[0] -= color.r;
+		minuend[1] -= color.g;
+		minuend[2] -= color.b;
 	}
 	difference = new Color(minuend);
 	difference._normalize();
@@ -439,9 +441,10 @@ Color.prototype.multiply = function() {
 	
 	for(var i = 0; i<arguments.length; i++) {
 		color = arguments[i];
-		product[0] *= color.r || color;
-		product[1] *= color.g || color;
-		product[2] *= color.b || color;
+		color = ( color instanceof Color)? color : {r:color,g:color,b:color};
+		product[0] *= color.r;
+		product[1] *= color.g;
+		product[2] *= color.b;
 	}
 	newProduct = new Color(product);
 	newProduct._normalize(newProduct);
@@ -452,9 +455,10 @@ Color.prototype.divide = function() {
 	var quotient, dividend=[this.r, this.g,this.b];
 	for(var i =0; i<arguments.length; i++) {
 		color = arguments[i];
-		dividend[0] /= color.r || color;
-		dividend[1] /= color.g || color;
-		dividend[2] /= color.b || color;
+		color = ( color instanceof Color)? color : {r:color,g:color,b:color};
+		dividend[0] /= color.r;
+		dividend[1] /= color.g;
+		dividend[2] /= color.b;
 	}
 	quotient = new Color(dividend);
 	quotient._normalize(quotient);
@@ -466,10 +470,10 @@ Color.prototype.pow = function() {
 	
 	for(var i =0; i<arguments.length; i++) {
 		color = arguments[i];
-		
-		sum[0] = Math.pow(base[0],color.r || color);
-		sum[1] = Math.pow(base[1],color.g || color);
-		sum[2] = Math.pow(base[2],color.b || color);
+		color = ( color instanceof Color)? color : {r:color,g:color,b:color};
+		sum[0] = Math.pow(base[0],color.r);
+		sum[1] = Math.pow(base[1],color.g);
+		sum[2] = Math.pow(base[2],color.b);
 		base = sum;
 	}
 	newSum = new Color(sum);
@@ -481,11 +485,11 @@ Color.prototype.log = function() {
 	var base=[this.r, this.g,this.b], color, sum = [0,0,0];
 	
 	for(var i =0; i<arguments.length; i++) {
-		color = arguments[i] || 1;
-		
-		sum[0] = Math.log(base[0]) / Math.log(color.r || color);
-		sum[1] = Math.log(base[1]) / Math.log(color.g || color);
-		sum[2] = Math.log(base[2]) / Math.log(color.b || color);
+		color = arguments[i];
+		color = ( color instanceof Color)? color : {r:color,g:color,b:color};
+		sum[0] = Math.log(base[0]) / Math.log(color.r);
+		sum[1] = Math.log(base[1]) / Math.log(color.g);
+		sum[2] = Math.log(base[2]) / Math.log(color.b);
 		base = sum;
 	}
 	newSum = new Color(sum);
@@ -503,42 +507,51 @@ Color.prototype.math = function(cb) {
 
 Color.prototype.hue= function() {
 	var color = this,
-	degrees = arguments[0];
+	percent = arguments[0]/360,
+	hsl = Color.prototype.toHsl.call(color);
 	
-	saturation = Color.prototype._normalizeValue(0,360,saturation);
+	if(!arguments.length) {
+		return hsl[0]*360;
+	}
 	
-	hsl = Color.prototype.rgbToHsl(color.r,color.g, color.b);
-	newHue = degrees;
-	newRGB = Color.prototype.hslToRgb(newHue,hsl[1], hsl[2]);
+	degrees = Color.prototype._normalizeValue(0,1,percent);
+	newRGB = Color.prototype.hslToRgb(percent,hsl[1], hsl[2]);
 	return new Color(newRGB);
 }
 
 Color.prototype.saturation = function() {
 	var color = this,
-	saturation = arguments[0];
+	saturation = arguments[0],
+	hsl = Color.prototype.toHsl.call(color);
+	
+	if(!arguments.length) {
+		return hsl[1];
+	}
 
 	saturation = Color.prototype._normalizeValue(0,1,saturation);
-	
-	hsl = Color.prototype.rgbToHsl(color.r,color.g, color.b);
-	newSaturation = saturation;
-	newRGB = Color.prototype.hslToRgb(hsl[0],newSaturation, hsl[2]);
+	newRGB = Color.prototype.hslToRgb(hsl[0],saturation, hsl[2]);
 	return new Color(newRGB);
 }
 
 Color.prototype.lightness = function() {
 	var color = this,
-	lightness = arguments[0];
+	lightness = arguments[0],
+	hsl = Color.prototype.toHsl.call(color);
+	
+	if(!arguments.length) {
+		return hsl[2];
+	}
 	
 	lightness = Color.prototype._normalizeValue(0,1,lightness);
-
-	hsl = Color.prototype.rgbToHsl(color.r,color.g, color.b);
-	newLightness = lightness;
-	newRGB = Color.prototype.hslToRgb(hsl[0],hsl[1], newLightness);
+	newRGB = Color.prototype.hslToRgb(hsl[0],hsl[1], lightness);
 	return new Color(newRGB);
 }
 
 Color.prototype.alpha = function() {
 	var color=this, alpha=arguments[0];
+	if(!arguments.length) {
+		return color.a;
+	}
 
 	alpha = Color.prototype._normalizeValue(0,1,alpha);
 	
