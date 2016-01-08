@@ -418,7 +418,6 @@ Color.prototype.add = function() {
 		sum[1] += color.g;
 		sum[2] += color.b;
 	}
-	console.log(sum);
 	newSum = new Color(sum);
 	newSum._normalize(newSum);
 	return newSum;
@@ -507,12 +506,12 @@ Color.prototype.math = function(cb) {
 	return newResult;
 }
 
-Color.prototype.hue= function() {
+Color.prototype.hue= function(h) {
 	var color = this,
 	percent = arguments[0]/360,
 	hsl = Color.prototype.toHsl.call(color);
 	
-	if(!arguments.length) {
+	if(!h) {
 		return hsl[0]*360;
 	}
 	
@@ -521,31 +520,29 @@ Color.prototype.hue= function() {
 	return new Color(newRGB);
 }
 
-Color.prototype.saturation = function() {
+Color.prototype.saturation = function(s) {
 	var color = this,
-	saturation = arguments[0],
 	hsl = Color.prototype.toHsl.call(color);
 	
-	if(!arguments.length) {
+	if(!s) {
 		return hsl[1];
 	}
 
-	saturation = Color.prototype._normalizeValue(0,1,saturation);
-	newRGB = Color.prototype.hslToRgb(hsl[0],saturation, hsl[2]);
+	saturation = Color.prototype._normalizeValue(0,1,s);
+	newRGB = Color.prototype.hslToRgb(hsl[0],s, hsl[2]);
 	return new Color(newRGB);
 }
 
-Color.prototype.lightness = function() {
+Color.prototype.lightness = function(l) {
 	var color = this,
-	lightness = arguments[0],
 	hsl = Color.prototype.toHsl.call(color);
 	
-	if(!arguments.length) {
+	if(!l) {
 		return hsl[2];
 	}
 	
-	lightness = Color.prototype._normalizeValue(0,1,lightness);
-	newRGB = Color.prototype.hslToRgb(hsl[0],hsl[1], lightness);
+	lightness = Color.prototype._normalizeValue(0,1,l);
+	newRGB = Color.prototype.hslToRgb(hsl[0],hsl[1], l);
 	return new Color(newRGB);
 }
 
