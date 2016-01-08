@@ -67,7 +67,7 @@ app.service("docsService", [  function() {
 			 name: "hslToRgb",
 			 arguments: [{
 				 name: "h",
-				 units: "number"
+				 units: "degree"
 			 	},
 			 	{
 					 name: "s",
@@ -80,7 +80,7 @@ app.service("docsService", [  function() {
 			 ],
 			 val: "[r,g,b]",
 			 description: "",
-			 example: '// provide name of CSS color\nColor.prototype.hslToRgb(0.2,0.5,0.2);'+
+			 example: '// provide name of CSS color\nColor.prototype.hslToRgb(72,0.5,0.2);'+
 			 ' // [66, 77, 25]',
 		 },
 		 {
@@ -104,7 +104,7 @@ app.service("docsService", [  function() {
 			 val: "[h,s,l]",
 			 description: "",
 			 example: '// create instance of a Color\nvar purple = new Color("purple");'+
-			 '\npurple.toHsl(); // "#800080" \n', +
+			 '\npurple.toHsla(); // [300, 1, 0.25098039215686274, 1] \n', +
 			 '// provide an rgb value (a optional) \nColor.prototype.toHsl(66,77,25); // [0.19940476190476186, 0.5714285714285715, 0.19215686274509802, 1]',
 		 },
 		 {
