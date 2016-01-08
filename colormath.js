@@ -248,7 +248,7 @@ Color.prototype.hslToRgb = function(h, s, l){
  * @param   Number  b       The blue color value
  * @return  Array           The HSL representation
  */
-Color.prototype.toHsl= function(r,g,b,a){
+Color.prototype.toHsla= function(r,g,b,a){
 	r = r || this.r,
 	g = g || this.g,
 	b = b || this.b,
