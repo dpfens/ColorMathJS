@@ -508,20 +508,20 @@ Color.prototype.math = function(cb) {
 
 Color.prototype.hue= function(h) {
 	var color = this,
-	hsl = Color.prototype.toHsl.call(color);
+	hsl = Color.prototype.toHsla.call(color);
 	
 	if(!h) {
-		return hsl[0]*360;
+		return hsl[0];
 	}
 	
-	degrees = Color.prototype._normalizeValue(0,360,h);
-	newRGB = Color.prototype.hslToRgb(h,hsl[1], hsl[2]);
+	degrees = Color.prototype._normalizeValue(0,360,percent);
+	newRGB = Color.prototype.hslToRgb(degrees,hsl[1], hsl[2]);
 	return new Color(newRGB);
 }
 
 Color.prototype.saturation = function(s) {
 	var color = this,
-	hsl = Color.prototype.toHsl.call(color);
+	hsl = Color.prototype.toHsla.call(color);
 	
 	if(!s) {
 		return hsl[1];
@@ -534,7 +534,7 @@ Color.prototype.saturation = function(s) {
 
 Color.prototype.lightness = function(l) {
 	var color = this,
-	hsl = Color.prototype.toHsl.call(color);
+	hsl = Color.prototype.toHsla.call(color);
 	
 	if(!l) {
 		return hsl[2];
@@ -545,15 +545,15 @@ Color.prototype.lightness = function(l) {
 	return new Color(newRGB);
 }
 
-Color.prototype.alpha = function(a) {
-	var color=this;
-	if(!a) {
+Color.prototype.alpha = function() {
+	var color=this, alpha=arguments[0];
+	if(!arguments.length) {
 		return color.a;
 	}
 
-	a = Color.prototype._normalizeValue(0,1,a);
+	alpha = Color.prototype._normalizeValue(0,1,alpha);
 	
 	newColor = color.clone();
-	newColor.a = a;
+	newColor.a = alpha;
 	return newColor;
 }
