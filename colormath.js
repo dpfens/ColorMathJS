@@ -212,6 +212,8 @@ Color.prototype.toString = function() {
  */
 Color.prototype.hslToRgb = function(h, s, l){
     var r, g, b;
+    // h entered in degrees
+    h /= 360;
 
     if(s == 0){
         r = g = b = l; // achromatic
