@@ -26,7 +26,7 @@ app.service("docsService", [  function() {
 	var docs = [
 	    {
 		 name: "Color",
-		 description: "As people are the focus of healthcare, they are focus of FitnessJS. The Person object is capable of performing all calculations that FitnessJS has to offer.",
+		 description: "",
 		 arguments: [],
 		 example: '// create instance of a Color using CSS color name\nvar purple = new Color(128,0,128),'+
 		 '\n// create instance of a Color using hex values\nred = new Color(255,0,0),'+
@@ -104,7 +104,7 @@ app.service("docsService", [  function() {
 			 val: "[h,s,l]",
 			 description: "",
 			 example: '// create instance of a Color\nvar purple = new Color("purple");'+
-			 '\npurple.toHsla(); // [300, 1, 0.25098039215686274, 1] \n', +
+			 '\npurple.toHsla(); // [300, 1, 0.25098039215686274, 1] \n' +
 			 '// provide an rgb value (a optional) \nColor.prototype.toHsl(66,77,25); // [0.19940476190476186, 0.5714285714285715, 0.19215686274509802, 1]',
 		 },
 		 {
@@ -146,7 +146,7 @@ app.service("docsService", [  function() {
 			 val: "[c,m,y,k]",
 			 description: "",
 			 example: '// create instance of a Color \nvar purple = new Color("purple");'+
-			 '\npurple.toCmyk(); // [0, 1, 0, 0.4980392156862745] \n', +
+			 '\npurple.toCmyk(); // [0, 1, 0, 0.4980392156862745] \n' +
 			 '// provide an rgb value (a optional) \nColor.prototype.toCmyk(66,77,25); // [0.14285714285714307, 0, 0.6753246753246754, 0.6980392156862745]',
 		 },
 		 {
@@ -165,7 +165,7 @@ app.service("docsService", [  function() {
 			 val: "kcal/day",
 			 description: "",
 			 example: '// create instance of a Color \nvar purple = new Color("purple");'+
-			 '\npurple.toHex(); // "#800080" \n', +
+			 '\npurple.toHex(); // "#800080" \n' +
 			 '// provide a hex value \nColor.prototype.toHex(128, 0, 128); // "#800080"',
 		 },
 		 {
@@ -176,7 +176,7 @@ app.service("docsService", [  function() {
 			 }],
 			 val: "boolean",
 			 description: "",
-			 example: 'Color.prototype.isHex([]); // false'+
+			 example: 'Color.prototype.isHex([]); // false\n'+
 			 'Color.prototype.isHex("#800080"); // true',
 		 },
 		 {
@@ -187,7 +187,8 @@ app.service("docsService", [  function() {
 			 },
 			 {
 				 name: "percentage",
-				 units: "number"
+				 units: "number",
+				 optional: true,
 			 }],
 			 val: "Color",
 			 description: "",
@@ -203,7 +204,8 @@ app.service("docsService", [  function() {
 			 },
 			 {
 				 name: "steps",
-				 units: "number"
+				 units: "number",
+				 optional: true,
 			 }],
 			 val: "Color",
 			 description: "",
@@ -288,7 +290,7 @@ app.service("docsService", [  function() {
 			 description: "",
 			 example: '// create instance of a Colors \nvar purple = new Color("purple"),'+
 			 '// create a custom function\n'+
-			 'function custom(r,g,b,a) { return [r*1,g/2,b+2,a-0.2]; }'
+			 'function custom(r,g,b,a) { return [r*1,g/2,b+2,a-0.2]; }'+
 			 '\npurple.math(custom); Color {r: 128, g: 0, b: 130, a: 0.8}',
 		 },
 		 {
@@ -376,75 +378,16 @@ app.service("docsService", [  function() {
 
 app.controller('overviewController', ['$scope','docsService', function($scope, docsService) {
 	$scope.docs = docsService.get();
-    $scope.index = true;
 	
-	$scope.$on('showIndex', function(e,d) {
-		$scope.index = d;
-		$scope.module = !d;
-		$scope.method = !d;
-	});
-	
-	$scope.$on('showModule', function(e,d) {
-		$scope.index = false;
-		$scope.module = d;
-		$scope.method = false;
-	});
-	
-	$scope.$on('showMethod', function(e,d) {
-		$scope.index = false;
-		$scope.module = false;
-		$scope.method = d;
-	});
 }]);
 
 app.controller('listController', ['$scope', function($scope) {
-	$scope.showIndex = function() {
-		$scope.$emit('showIndex', true);
-	}
-	
-	$scope.showModule = function(module) {
-		$scope.$emit('showModule', module);
-	}
-	
-	$scope.showMethod = function(method) {
-		$scope.$emit('showMethod', method);
-	}
-}]);
-
-app.controller('indexController', ['$scope','docsService', function($scope, docsService) {
-    $scope.showIndex = function() {
-		$scope.$emit('showIndex', true);
-	}
-	
-	$scope.showModule = function(name) {
-        var module = docsService.getModule(name);
-		$scope.$emit('showModule', module);
-	}
-	
-	$scope.showMethod = function(module,method) {
-        var method = docsService.getMethod(module, method);
-		$scope.$emit('showMethod', method);
-	}
 }]);
 
 app.controller('moduleController', ['$scope', function($scope) {
-	$scope.argumentsList = $scope.module.arguments.map(function(v) { return (v.units)? '<span class="parameter-type">'+v.units+'</span> '+ v.name : v.name;});
-	$scope.methodList = $scope.module.methods.map(function(v) { return v.name;});
-	
-	$scope.$watch('module', function(ov, nv) {
-		if(nv!==ov) {
-			$scope.argumentsList = $scope.module.arguments.map(function(v) { return (v.units)? '<span class="parameter-type">'+v.units+'</span> '+ v.name : v.name; });
-			$scope.methodList = $scope.module.methods.map(function(v) { return v.name;});
-		}
-	});
+	$scope.argumentsList = $scope.module.arguments.map(function(v) { return '<span class="parameter-type">'+v.units+'</span> '+ v.name; });
 }]);
 
 app.controller('methodController', ['$scope', function($scope) {
-	$scope.argumentsList = $scope.method.arguments.map(function(v) { return (v.units)? '<span class="parameter-type">'+v.units+'</span> '+ v.name : v.name;});
-	
-	$scope.$watch('method', function(ov, nv) {
-		if(nv!==ov) {
-			$scope.argumentsList = $scope.method.arguments.map(function(v) { return (v.units)? ' <span class="parameter-type">'+v.units+'</span> '+ v.name : v.name;});
-		}
-	});
+	$scope.argumentsList = $scope.method.arguments.map(function(v) { return (v.optional) ? '[<span class="parameter-type">'+v.units+'</span> '+ v.name+']' : '<span class="parameter-type">'+v.units+'</span> '+ v.name;});
 }]);
