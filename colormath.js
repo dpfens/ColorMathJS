@@ -212,6 +212,8 @@ Color.prototype.toString = function() {
  */
 Color.prototype.hslToRgb = function(h, s, l){
     var r, g, b;
+    // h entered in degrees
+    h /= 360;
 
     if(s == 0){
         r = g = b = l; // achromatic
@@ -246,7 +248,7 @@ Color.prototype.hslToRgb = function(h, s, l){
  * @param   Number  b       The blue color value
  * @return  Array           The HSL representation
  */
-Color.prototype.toHsl= function(r,g,b,a){
+Color.prototype.toHsla= function(r,g,b,a){
 	r = r || this.r,
 	g = g || this.g,
 	b = b || this.b,
@@ -416,7 +418,6 @@ Color.prototype.add = function() {
 		sum[1] += color.g;
 		sum[2] += color.b;
 	}
-	console.log(sum);
 	newSum = new Color(sum);
 	newSum._normalize(newSum);
 	return newSum;
@@ -505,45 +506,42 @@ Color.prototype.math = function(cb) {
 	return newResult;
 }
 
-Color.prototype.hue= function() {
+Color.prototype.hue= function(h) {
 	var color = this,
-	percent = arguments[0]/360,
-	hsl = Color.prototype.toHsl.call(color);
+	hsl = Color.prototype.toHsla.call(color);
 	
-	if(!arguments.length) {
-		return hsl[0]*360;
+	if(!h) {
+		return hsl[0];
 	}
 	
-	degrees = Color.prototype._normalizeValue(0,1,percent);
-	newRGB = Color.prototype.hslToRgb(percent,hsl[1], hsl[2]);
+	degrees = Color.prototype._normalizeValue(0,360,percent);
+	newRGB = Color.prototype.hslToRgb(degrees,hsl[1], hsl[2]);
 	return new Color(newRGB);
 }
 
-Color.prototype.saturation = function() {
+Color.prototype.saturation = function(s) {
 	var color = this,
-	saturation = arguments[0],
-	hsl = Color.prototype.toHsl.call(color);
+	hsl = Color.prototype.toHsla.call(color);
 	
-	if(!arguments.length) {
+	if(!s) {
 		return hsl[1];
 	}
 
-	saturation = Color.prototype._normalizeValue(0,1,saturation);
-	newRGB = Color.prototype.hslToRgb(hsl[0],saturation, hsl[2]);
+	s = Color.prototype._normalizeValue(0,1,s);
+	newRGB = Color.prototype.hslToRgb(hsl[0],s, hsl[2]);
 	return new Color(newRGB);
 }
 
-Color.prototype.lightness = function() {
+Color.prototype.lightness = function(l) {
 	var color = this,
-	lightness = arguments[0],
-	hsl = Color.prototype.toHsl.call(color);
+	hsl = Color.prototype.toHsla.call(color);
 	
-	if(!arguments.length) {
+	if(!l) {
 		return hsl[2];
 	}
 	
-	lightness = Color.prototype._normalizeValue(0,1,lightness);
-	newRGB = Color.prototype.hslToRgb(hsl[0],hsl[1], lightness);
+	l = Color.prototype._normalizeValue(0,1,l);
+	newRGB = Color.prototype.hslToRgb(hsl[0],hsl[1], l);
 	return new Color(newRGB);
 }
 
