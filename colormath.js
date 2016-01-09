@@ -409,6 +409,13 @@ Color.prototype._normalize = function() {
 	this.a = this._normalizeValue(0,1,this.a);
 }
 
+Color.prototype._round = function() {
+	var round = Math.round;
+	this.r= round(this.r);
+	this.g = round(this.g);
+	thiis.b = round(this.b);
+}
+
 Color.prototype.add = function() {
 	var sum = [this.r, this.g, this.b, this.a], color;
 	for(var i = 0; i<arguments.length; i++) {
