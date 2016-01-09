@@ -413,7 +413,7 @@ Color.prototype._round = function() {
 	var round = Math.round;
 	this.r= round(this.r);
 	this.g = round(this.g);
-	thiis.b = round(this.b);
+	this.b = round(this.b);
 }
 
 Color.prototype.add = function() {
