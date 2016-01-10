@@ -391,3 +391,5 @@ app.controller('moduleController', ['$scope', function($scope) {
 app.controller('methodController', ['$scope', function($scope) {
 	$scope.argumentsList = $scope.method.arguments.map(function(v) { return (v.optional) ? '[<span class="parameter-type">'+v.units+'</span> '+ v.name+']' : '<span class="parameter-type">'+v.units+'</span> '+ v.name;});
 }]);
+
+$(document).foundation();
