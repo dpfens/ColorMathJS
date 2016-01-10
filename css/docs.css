@@ -2,6 +2,10 @@
 	position: fixed;
 }
 
+.parameter-type {
+	font-size: 0.6em;
+}
+
 @media only screen and (max-width: 40em) {
 
 	.sticky {
