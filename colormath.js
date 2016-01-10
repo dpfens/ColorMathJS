@@ -409,6 +409,13 @@ Color.prototype._normalize = function() {
 	this.a = this._normalizeValue(0,1,this.a);
 }
 
+Color.prototype._round = function() {
+	var round = Math.round;
+	this.r= round(this.r);
+	this.g = round(this.g);
+	this.b = round(this.b);
+}
+
 Color.prototype.add = function() {
 	var sum = [this.r, this.g, this.b, this.a], color;
 	for(var i = 0; i<arguments.length; i++) {
@@ -420,6 +427,7 @@ Color.prototype.add = function() {
 	}
 	newSum = new Color(sum);
 	newSum._normalize(newSum);
+	newSum._round();
 	return newSum;
 }
 
@@ -434,6 +442,7 @@ Color.prototype.subtract = function() {
 	}
 	difference = new Color(minuend);
 	difference._normalize();
+	difference._round();
 	return difference;
 }
 
@@ -449,6 +458,7 @@ Color.prototype.multiply = function() {
 	}
 	newProduct = new Color(product);
 	newProduct._normalize(newProduct);
+	newProduct._round();
 	return newProduct;
 }
 
@@ -463,6 +473,7 @@ Color.prototype.divide = function() {
 	}
 	quotient = new Color(dividend);
 	quotient._normalize(quotient);
+	quotient._round();
 	return quotient;
 }
 
@@ -479,6 +490,7 @@ Color.prototype.pow = function() {
 	}
 	newSum = new Color(sum);
 	newSum._normalize(newSum);
+	newSum._round();
 	return newSum;
 }
 
@@ -495,6 +507,7 @@ Color.prototype.log = function() {
 	}
 	newSum = new Color(sum);
 	newSum._normalize(newSum);
+	newSum._round();
 	return newSum;
 }
 
@@ -503,6 +516,7 @@ Color.prototype.math = function(cb) {
 	result = cb(this.r,this.g,this.b,this.a);
 	newResult = new Color(result);
 	newResult._normalize(newResult);
+	newResult._round();
 	return newResult;
 }
 
