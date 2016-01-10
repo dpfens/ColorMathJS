@@ -28,8 +28,8 @@ app.service("docsService", [  function() {
 		 name: "Color",
 		 description: "",
 		 arguments: [],
-		 example: '// create instance of a Color using CSS color name\nvar purple = new Color(128,0,128),'+
-		 '\n// create instance of a Color using hex values\nred = new Color(255,0,0),'+
+		 example: '// create instance of a Color using CSS color name\nvar purple = new Color("blueviolet"),'+
+		 '\n// create instance of a Color using hex values\nred = new Color("#FF0000"),'+
 		 '\n// create instance of a Color using r,g,b values\nolive = new Color(128,128,0);',
 		 methods: [{
 			 name: "nameToRgb",
