@@ -52,7 +52,7 @@
 		</div>
 				
 				<div ng-controller="moduleController" id="{{module.name}}" data-magellan-target="{{module.name}}" data-magellan-target="{{module.name}}" ng-repeat="module in docs">
-					<h2>{{module.name}}(<span ng-bind-html="argumentsList.join(', ')"></span>)</h2>
+					<h2>{{module.name}}(<span ng-repeat="argument in module.arguments"><span ng-if="argument.optional">[</span><span class="parameter-type">{{argument.units}}</span> {{argument.name}} <span ng-if="argument.default">{{argument.default}}</span><span ng-if="argument.optional">]</span><span ng-if="!$last">,</span> </span>)</h2>
 				
 					<p ng-bind-html="module.description"></p>
 				
@@ -60,7 +60,8 @@
 			
 			
 					<article ng-repeat="method in module.methods" class="method" ng-controller="methodController" id="{{method.name}}" data-magellan-target="{{ method.name }}">
-						<h3><span class="method-type" ng-bind-html=""></span> {{method.name}}(<span ng-bind-html="argumentsList.join(', ')"></span>)</h3>
+						<hr/>
+						<h3>{{method.name}}(<span ng-repeat="argument in method.arguments"><span ng-if="argument.optional">[</span><span class="parameter-type">{{argument.units}}</span> {{argument.name}} <span ng-if="argument.default">{{argument.default}}</span><span ng-if="argument.optional">]</span><span ng-if="!$last">,</span> </span>)</h3>
 				
 						<p ng-bind-html="method.description"></p>
 				

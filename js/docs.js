@@ -370,8 +370,8 @@ app.service("docsService", [  function() {
 	
 	return {
 		get: get,
-        getModule: getModule,
-        getMethod: getMethod,
+		getModule: getModule,
+		getMethod: getMethod,
 	};
 	
 }]);
@@ -385,11 +385,9 @@ app.controller('listController', ['$scope', function($scope) {
 }]);
 
 app.controller('moduleController', ['$scope', function($scope) {
-	$scope.argumentsList = $scope.module.arguments.map(function(v) { return '<span class="parameter-type">'+v.units+'</span> '+ v.name; });
 }]);
 
 app.controller('methodController', ['$scope', function($scope) {
-	$scope.argumentsList = $scope.method.arguments.map(function(v) { return (v.optional) ? '[<span class="parameter-type">'+v.units+'</span> '+ v.name+']' : '<span class="parameter-type">'+v.units+'</span> '+ v.name;});
 }]);
 
 $(document).foundation();
