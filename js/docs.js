@@ -26,7 +26,7 @@ app.service("docsService", [  function() {
 	var docs = [
 	    {
 		 name: "Color",
-		 description: "",
+		 description: "Used to create a new instance of a Color from raw color data. This constructor accepts CSS color names, hex values, and rgb values.",
 		 arguments: [],
 		 example: '// create instance of a Color using CSS color name\nvar purple = new Color("blueviolet"),'+
 		 '\n// create instance of a Color using hex values\nred = new Color("#FF0000"),'+
@@ -38,18 +38,15 @@ app.service("docsService", [  function() {
 				 units: "string"
 			 	}],
 			 val: "[r,g,b]",
-			 description: "",
+			 description: "This static method takes a CSS color name and returns an [r,g,b] array.",
 			 example: '// provide name of CSS color\nColor.prototype.nameToRgb("olive");'+
 			 ' // [128, 128, 0]',
 		 },
 		 {
 			 name: "clone",
-			 arguments: [{
-				 name: "color",
-				 units: "Color"
-			 	}],
+			 arguments: [],
 			 val: "Color",
-			 description: "",
+			 description: "this method returns a new copy of a previously existing Color instance.",
 			 equations: [],
 			 example: '// create instance of a Color\nvar purple = new Color("purple");'+
 				 '// provide name of CSS color\nColor.prototype.clone(purple); // Color {r: 128, g: 0, b: 128, a: 1}',
@@ -58,7 +55,7 @@ app.service("docsService", [  function() {
 			 name: "toString",
 			 arguments: [],
 			 val: "string",
-			 description: "",
+			 description: "This method returns an instance of a Color as hex",
 			 equations: [],
 			 example: '// create instance of a Color\nvar purple = new Color("purple");'+
 			 '\npurple.toString(); // "#800080" ',
@@ -79,12 +76,12 @@ app.service("docsService", [  function() {
 				 }
 			 ],
 			 val: "[r,g,b]",
-			 description: "",
+			 description: "This static method takes an hsl color and returns it as an [r,g,b] array",
 			 example: '// provide name of CSS color\nColor.prototype.hslToRgb(72,0.5,0.2);'+
 			 ' // [66, 77, 25]',
 		 },
 		 {
-			 name: "toHsl",
+			 name: "toHsla",
 			 arguments: [{
 				 name: "r",
 				 units: "number"
@@ -102,7 +99,7 @@ app.service("docsService", [  function() {
 					 units: "number"
 			 }],
 			 val: "[h,s,l]",
-			 description: "",
+			 description: "When called as a static method, this method takes an hsla color and returns an [h,s,l,a] array. When called from a Color instance, it returns that color as a an [h,s,l,a] array.",
 			 example: '// create instance of a Color\nvar purple = new Color("purple");'+
 			 '\npurple.toHsla(); // [300, 1, 0.25098039215686274, 1] \n' +
 			 '// provide an rgb value (a optional) \nColor.prototype.toHsl(66,77,25); // [0.19940476190476186, 0.5714285714285715, 0.19215686274509802, 1]',
@@ -126,7 +123,7 @@ app.service("docsService", [  function() {
 					 units: "number"
 			 }],
 			 val: "[r,g,b]",
-			 description: "",
+			 description: "This static method takes c,m,y,k values and returns an [r,g,b] array.",
 			 example: '// provide a c,m,y,k value \nColor.prototype.cmykToRgb(35,0,25,0); // [166, 255, 191]',
 		 },
 		 {
@@ -144,7 +141,7 @@ app.service("docsService", [  function() {
 					 units: "number"
 			 }],
 			 val: "[c,m,y,k]",
-			 description: "",
+			 description: "When called as a static method, this method takes an r,g,b color and returns a [c,m,y,k] array. When called from a Color instance, it returns that color as a an [c,m,y,k] array.",
 			 example: '// create instance of a Color \nvar purple = new Color("purple");'+
 			 '\npurple.toCmyk(); // [0, 1, 0, 0.4980392156862745] \n' +
 			 '// provide an rgb value (a optional) \nColor.prototype.toCmyk(66,77,25); // [0.14285714285714307, 0, 0.6753246753246754, 0.6980392156862745]',
@@ -156,14 +153,25 @@ app.service("docsService", [  function() {
 				 units: "string"
 			 	}],
 			 val: "kcal",
-			 description: "",
+			 description: "This static method takes a hex string and returns an [r,g,b] array",
 			 example: '// provide a hex value \nColor.prototype.hexToRgb("#800080"); // [128, 0, 128]',
 		 },
 		 {
 			 name: "toHex",
-			 arguments: [],
-			 val: "kcal/day",
-			 description: "",
+			 arguments: [{
+				 name: "r",
+				 units: "number"
+			 	},
+			 	{
+					 name: "g",
+					 units: "number"
+				 },
+				 {
+					 name: "b",
+					 units: "number"
+			 }],
+			 val: "",
+			 description: "When called as a static method, this method takes an r,g,b color and returns a hex string. When called from a Color instance, it returns that color as a an hex string.",
 			 example: '// create instance of a Color \nvar purple = new Color("purple");'+
 			 '\npurple.toHex(); // "#800080" \n' +
 			 '// provide a hex value \nColor.prototype.toHex(128, 0, 128); // "#800080"',
@@ -175,7 +183,7 @@ app.service("docsService", [  function() {
 				 units: "object"
 			 }],
 			 val: "boolean",
-			 description: "",
+			 description: "This static method takes any object and returns whether or not the object is a valid hex string",
 			 example: 'Color.prototype.isHex([]); // false\n'+
 			 'Color.prototype.isHex("#800080"); // true',
 		 },
@@ -191,7 +199,7 @@ app.service("docsService", [  function() {
 				 optional: true,
 			 }],
 			 val: "Color",
-			 description: "",
+			 description: "This method blends two colors together using a specified percentage of the color. For example, <code class=\"language-javascript\">purple.blend(olive, 0.7)</code> blends the two colors using 70% olive, and 30% purple. The default percentage is 0.5 (or 50% of each color)",
 			 example: '// create instance of two Colors \nvar purple = new Color("purple"),'+
 			 'olive = new Color(128,128,0),'+
 			 '\npurple.blend(olive, 0.7); // Color {r: 128, g: 90, b: 38, a: 1}',
@@ -208,7 +216,7 @@ app.service("docsService", [  function() {
 				 optional: true,
 			 }],
 			 val: "Color",
-			 description: "",
+			 description: "This method takes two colors and returns <code>steps</code> Colors between the two colors.",
 			 example: '// create instance of two Colors \nvar purple = new Color("purple"),'+
 			 'olive = new Color(128,128,0),'+
 			 '\npurple.steps(olive, 5); // [Color, Color, Color, Color, Color]',
@@ -217,8 +225,8 @@ app.service("docsService", [  function() {
 			 name: "add",
 			 arguments: [],
 			 val: "Color",
-			 description: "",
-			 example: '// create instance of two Colors \nvar purple = new Color("purple"),'+
+			 description: "This method adds any number of color instance values or numbers to all the values of each color.",
+			 example: '// create instance of two Colors \nvar purple = new Color(128,0,128),\n'+
 			 'olive = new Color(128,128,0),'+
 			 '\npurple.add(olive); // Color {r: 255, g: 128, b: 128, a: 1}'+
 			 '\n// or add a single number'+
@@ -228,18 +236,18 @@ app.service("docsService", [  function() {
 			 name: "subtract",
 			 arguments: [],
 			 val: "Color",
-			 description: "",
-			 example: '// create instance of two Colors \nvar purple = new Color("purple"),'+
+			 description: "This method subtracts any number of color instance values or numbers from all the values of each channel.",
+			 example: '// create instance of two Colors \nvar purple = new Color(128,0,128),'+
 			 'olive = new Color(128,128,0),'+
 			 '\npurple.subtract(olive); // Color {r: 0, g: 0, b: 128, a: 1}'+
-			 '\n// or add a single number'+
+			 '\n// or subtract a single number'+
 			 '\npurple.subtract(5); // Color {r: 123, g: 0, b: 123, a: 1}',
 		 },
 		 {
 			 name: "multiply",
 			 arguments: [],
 			 val: "Color",
-			 description: "",
+			 description: "This method multiplies any number of color instance values or numbers from all the values of each channel.",
 			 example: '// create instance of two Colors \nvar purple = new Color("purple"),'+
 			 'olive = new Color(128,128,0),'+
 			 '\npurple.multiply(olive); // Color {r: 255, g: 0, b: 0, a: 1}'+
@@ -250,7 +258,7 @@ app.service("docsService", [  function() {
 			 name: "divide",
 			 arguments: [],
 			 val: "Color",
-			 description: "",
+			 description: "This method divides any number of color instance values or numbers by the values of each channel.",
 			 example: '// create instance of two Colors \nvar purple = new Color("purple"),'+
 			 'olive = new Color(128,128,0),'+
 			 '\npurple.divide(olive); // Color {r: 1, g: 0, b: 255, a: 1}'+
@@ -261,7 +269,7 @@ app.service("docsService", [  function() {
 			 name: "pow",
 			 arguments: [],
 			 val: "Color",
-			 description: "",
+			 description: "This method take the values of each channel and takes the exponent of each Color or number given as an argument.",
 			 example: '// create instance of two Colors \nvar purple = new Color("purple"),'+
 			 'olive = new Color(128,128,0),'+
 			 '\npurple.pow(olive); Color {r: 255, g: 0, b: 1, a: 1}'+
@@ -272,7 +280,7 @@ app.service("docsService", [  function() {
 			 name: "log",
 			 arguments: [],
 			 val: "Color",
-			 description: "",
+			 description: "This method take the values of each channel and takes the logarithm of each Color or number given as an argument.",
 			 example: '// create instance of two Colors \nvar purple = new Color("purple"),'+
 			 'olive = new Color(128,128,0),'+
 			 '\npurple.log(olive); Color {r: 1, g: 0, b: -0, a: 1}'+
@@ -287,7 +295,7 @@ app.service("docsService", [  function() {
 				 units: "Function"
 			 }],
 			 val: "Color",
-			 description: "",
+			 description: "This method is used to allow the developers an interface for performing custom calculations on a number.  The function argument must take r,g,b,a as arguments and return an [r,g,b,a] array of the result of the calculations",
 			 example: '// create instance of a Colors \nvar purple = new Color("purple"),'+
 			 '// create a custom function\n'+
 			 'function custom(r,g,b,a) { return [r*1,g/2,b+2,a-0.2]; }'+
@@ -300,7 +308,7 @@ app.service("docsService", [  function() {
 				 units: "number"
 			 }],
 			 val: "Color",
-			 description: "",
+			 description: "This method takes a hue (in degrees) and returns a new Color instance with the specified hue value.",
 			 example: '// create instance of a Colors \nvar purple = new Color("purple"),'+
 			 '// specify a value (in degrees) for hue\n'+
 			 'purple.hue(120); // Color {r: 0, g: 128, b: 0, a: 1}'
@@ -312,7 +320,7 @@ app.service("docsService", [  function() {
 				 units: "number"
 			 }],
 			 val: "Color",
-			 description: "",
+			 description: "This method takes a saturation percentage and returns a new Color instance with the specified saturation value.",
 			 example: '// create instance of a Colors \nvar purple = new Color("purple"),'+
 			 '// specify a value for saturation\n'+
 			 'purple.saturation(0.5); // Color {r: 96, g: 32, b: 96, a: 1}'
@@ -324,7 +332,7 @@ app.service("docsService", [  function() {
 				 units: "number"
 			 }],
 			 val: "Color",
-			 description: "",
+			 description: "This method takes a lightness percentage and returns a new Color instance with the specified lightness value.",
 			 example: '// create instance of a Colors \nvar purple = new Color("purple"),'+
 			 '// specify a value for lightness\n'+
 			 'purple.lightness(0.5); // Color {r: 255, g: 0, b: 255, a: 1}'
@@ -336,7 +344,7 @@ app.service("docsService", [  function() {
 				 units: "number"
 			 }],
 			 val: "Color",
-			 description: "",
+			 description: "This method takes an alpha percentage and returns a new Color instance with the specified alpha value.",
 			 example: '// create instance of a Colors \nvar purple = new Color("purple"),'+
 			 '// specify a value for alpha\n'+
 			 'purple.alpha(0.5); // Color Color {r: 128, g: 0, b: 128, a: 0.5}'
