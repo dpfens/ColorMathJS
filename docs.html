@@ -53,7 +53,7 @@
                     </ol>
                 </div>
 				
-				<div ng-controller="moduleController" data-magellan-target="{{module.name}}" data-magellan-target="{{module.name}}" ng-repeat="module in docs">
+				<div ng-controller="moduleController" id="{{module.name}}" data-magellan-target="{{module.name}}" data-magellan-target="{{module.name}}" ng-repeat="module in docs">
 					<h2>{{module.name}}(<span ng-bind-html="argumentsList.join(', ')"></span>)</h2>
 				
 					<p ng-bind-html="module.description"></p>
