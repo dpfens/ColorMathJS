@@ -25,8 +25,9 @@
 				<aside class="sticky" ng-controller="listController">
 					<div >
 	            			<div data-magellan>
+						<a href="#dependencies">Dependencies</a>
 						<div ng-repeat="module in docs">
-							<h2><a ng-href="#{{module.name}}">{{module.name}}</a></h2>
+							<h3><a ng-href="#{{module.name}}">{{module.name}}</a></h3>
 							<ul class="method-list">
 								<li ng-repeat="method in module.methods"><a ng-href="#{{method.name}}" >{{method.name}}</a></li>
 							</ul>
@@ -43,15 +44,12 @@
                 
                 <p>Welcome to ColorMathJS Documentation.  This documentation is divided into modules. After reading the extremely short installation guide, I recommend that you get started with the Color class.</p>
                 
-                <h2>Installation</h2>            
-                <div>
-                    <h3>Download the library</h3>
-                
-                    <ol>
-                        <li><a href="https://github.com/dpfens/ColorMathJS/archive/master.zip">Download</a> ColorMathJS</li>
-                        <li>Start using ColorMathJS!</li>
-                    </ol>
-                </div>
+                <a class="button" href="https://github.com/dpfens/ColorMathJS/archive/master.zip">Download</a>
+
+		<div id="dependencies" data-magellan-target="dependencies">
+		<h2>Dependencies</h2>
+		<p>ColorMathJS has no dependencies. It works on all platforms that support Javascript.</p>
+		</div>
 				
 				<div ng-controller="moduleController" id="{{module.name}}" data-magellan-target="{{module.name}}" data-magellan-target="{{module.name}}" ng-repeat="module in docs">
 					<h2>{{module.name}}(<span ng-bind-html="argumentsList.join(', ')"></span>)</h2>
