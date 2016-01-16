@@ -1,13 +1,36 @@
 svg#logo {
 	width: 100%;
+	height: auto;
 }
 
 svg#logo text {
 	fill: url(#p-stripes);
 font-family: Helvetica;
-	font-size: 10rem;
 	dominant-baseline: middle;
 }
+
+@media screen 
+  and (max-width: 500px) {
+	svg#logo text {
+		font-size: 4rem;
+	}
+} 
+
+@media screen 
+  and (min-width: 501px)
+  and (max-width: 800px) {
+	svg#logo text {
+		font-size: 5rem;
+	}
+} 
+
+@media screen 
+  and (min-width: 801px) {
+	svg#logo text {
+		font-size: 7rem;
+	}
+} 
+
 
 .tag-line {
 	font-size: 1.25rem;
