@@ -1,5 +1,12 @@
-canvas#logo {
+svg#logo {
 	width: 100%;
+}
+
+svg#logo text {
+	fill: url(#p-stripes);
+font-family: Helvetica;
+	font-size: 10rem;
+	dominant-baseline: middle;
 }
 
 .tag-line {

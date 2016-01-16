@@ -7,7 +7,28 @@
 	</head>
 	
 	<body>
-		<canvas id="logo"><h1>ColorMathJS</h1></canvas>
+		<svg id="logo" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+			<defs>
+				<linearGradient id="Gradient">
+					<stop offset="0%" stop-color="crimson" /><stop offset="10%" stop-color="purple" />
+          				<stop offset="10%" stop-color="red" /><stop offset="20%" stop-color="crimson" />
+          				<stop offset="20%" stop-color="orangered" /><stop offset="30%" stop-color="red" />
+          				<stop offset="30%" stop-color="orange" /><stop offset="40%" stop-color="orangered" />
+          				<stop offset="40%" stop-color="gold" /><stop offset="50%" stop-color="orange" />
+          				<stop offset="50%" stop-color="yellowgreen" /><stop offset="60%" stop-color="gold" />
+          				<stop offset="60%" stop-color="green" /><stop offset="70%" stop-color="yellowgreen" />
+          				<stop offset="70%" stop-color="steelblue" /><stop offset="80%" stop-color="skyblue" />
+          				<stop offset="80%" stop-color="mediumpurple" /><stop offset="90%" stop-color="steelblue" />
+          				<stop offset="90%" stop-color="purple" /><stop offset="100%" stop-color="mediumpurple" />
+				</linearGradient>
+				<pattern id="p-stripes"  patternUnits="userSpaceOnUse" width="200" height="200" viewbox="0 0 200 200">
+					<rect width="200" height="200" fill="url(#Gradient)"/>
+				</pattern>
+
+			</defs>
+
+			<text dx="50%" dy="50%" text-anchor="middle">ColorMathJS</text>
+		</svg>
 		<header class="top-bar">
 			<ul class="vertical medium-horizontal menu icon-top top-bar-left">
 				<li><a href="index.html">Home</a></li>
