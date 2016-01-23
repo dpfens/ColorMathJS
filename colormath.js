@@ -528,7 +528,7 @@ Color.prototype.hue= function(h) {
 		return hsl[0];
 	}
 	
-	degrees = Color.prototype._normalizeValue(0,360,percent);
+	degrees = Color.prototype._normalizeValue(0,360,h);
 	newRGB = Color.prototype.hslToRgb(degrees,hsl[1], hsl[2]);
 	return new Color(newRGB);
 }
