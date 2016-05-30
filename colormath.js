@@ -541,6 +541,26 @@ var Color = (function() {
 		return newResult;
 	}
 	
+	Color.prototype.relLum = function() {
+		return 0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b;
+	}
+	
+	/**
+		AA - Normal text = 4.5:1
+		AA - Large text = 3:1
+		AAA - Normal text = 7:1 
+		AAA - Large text = 4.5:1
+	**/
+	Color.prototype.contrastRatio = function(other) {
+		var relLum1 = this.relLum(),
+		relLum2 = other.relLum(),
+		l1,l2;
+		if (relLum1 === relLum2) return;
+		l1 = Math.max(relLum1, relLum2),
+		l2 = Math.min(relLum1, relLum2);
+		return (l1+0.05)/(l2+0.05);
+	}
+	
 	Color.prototype.hue= function(h) {
 		var color = this,
 		newRGB,
@@ -600,5 +620,3 @@ var Color = (function() {
 	
 	return Color;
 })();
-
-Color;
