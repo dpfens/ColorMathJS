@@ -542,7 +542,10 @@ var Color = (function() {
 	}
 	
 	Color.prototype.relLum = function() {
-		return 0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b;
+		var r= Math.pow(this.r/255,2.2),
+		g = Math.pow(this.g/255,2.2),
+		b = Math.pow(this.b/255,2.2);
+		return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 	}
 	
 	/**
