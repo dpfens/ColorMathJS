@@ -4,7 +4,7 @@
 		<link rel="stylesheet" href="/ColorMathJS/css/prism.css" />
 		<link rel="stylesheet" href="/ColorMathJS/css/global.css" />
 		<link rel="stylesheet" href="/ColorMathJS/css/app.css" />
-		<title></title>
+		<title>Contrast Tool</title>
 	</head>
 	
 	<body>
@@ -13,25 +13,24 @@
 			<script>//(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-NCXJXW');</script>
 		<!-- End Google Tag Manager -->
 		<h1>Under Construction</h1>
-		<section ng-app="app">
-			<div class="visual" ng-controller="visualController">
+		<section ng-app="app" ng-controller="rootController">
 			
-			</div>
-			
-			<form ng-controller="inputController">
-			
+			<form class="small-6 medium-4 columns">
+				<label>Background</label><input type="color" ng-model="color.background" ng-change="calculateRatio()" />
+				<label>Text</label><input type="color" ng-model="color.text" ng-change="calculateRatio()" />
 			</form>
 			
-			<pre ng-controller="outputController">
-			
-			</pre>
+			<pre class="language-javascript" ng-controller="outputController"><code><span class="token keyword">var</span> textColor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Color</span><span class="token punctuation">(</span><span class="token string">"{{color.text}}"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+backgroundColor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Color</span><span class="token punctuation">(</span><span class="token string">"{{color.background}}"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+ratio <span class="token operator">=</span> textColor<span class="token punctuation">.</span><span class="token function">contrastRatio</span><span class="token punctuation">(</span>backgroundColor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>ratio<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// {{color.ratio}}</span></code></pre>
 		
 		</section>
 	</body>
 	<script src="/ColorMathJS/js/lib/jquery-2.1.4.min.js"></script>
 	<script src="/ColorMathJS/js/lib/foundation.min.js"></script>
-        <script src="/ColorMathJS/js/lib/lovefield.min.js"></script>
+	<script src="/ColorMathJS/js/lib/lovefield.min.js"></script>
 	<script src="/ColorMathJS/js/lib/angular.min.js"></script>
-	<script src="/ColorMathJS/js/lib/prism.js"></script>
+	<script src="/ColorMathJS/colormath.js"></script>
 	<script src="app.js"></script>
 </html>
