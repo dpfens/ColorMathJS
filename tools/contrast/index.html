@@ -15,12 +15,12 @@
 		<h1>Under Construction</h1>
 		<section ng-app="app" ng-controller="rootController">
 			
-			<form class="small-6 medium-4 columns">
+			<form class="small-12 medium-4 columns">
 				<label>Background</label><input type="color" ng-model="color.background" ng-change="calculateRatio()" />
 				<label>Text</label><input type="color" ng-model="color.text" ng-change="calculateRatio()" />
 			</form>
 			
-			<pre class="language-javascript" ng-controller="outputController"><code><span class="token keyword">var</span> textColor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Color</span><span class="token punctuation">(</span><span class="token string">"{{color.text}}"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+			<pre class="language-javascript small-12 medium-8 columns" ng-controller="outputController"><code><span class="token keyword">var</span> textColor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Color</span><span class="token punctuation">(</span><span class="token string">"{{color.text}}"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
 backgroundColor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Color</span><span class="token punctuation">(</span><span class="token string">"{{color.background}}"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
 ratio <span class="token operator">=</span> textColor<span class="token punctuation">.</span><span class="token function">contrastRatio</span><span class="token punctuation">(</span>backgroundColor<span class="token punctuation">)</span><span class="token punctuation">;</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>ratio<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// {{color.ratio}}</span></code></pre>
