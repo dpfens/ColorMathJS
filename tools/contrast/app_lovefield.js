@@ -159,8 +159,29 @@ get.JSON('/ColorMathJS/data/extended_hex.json', function(data) {
 		.then(function() {
 			return db.select().from(colorTable).where(colorTable.userDefined.eq(false)).exec();	
 		}).then(function(results) {
-			console.log(results);
+			var content = listColors(results);
 		})
 		
 	});
 });
+
+function listColors(colors) {
+	var color, row, results="";
+	console.log(colors.length);
+	for (var i =0; i<colors.length; i++) {
+		row = colors[i],
+		color = formatColor(row);
+		console.log(color);
+		results += color;
+	}
+	return results;
+
+	function formatColor(color) {
+		var colorInstance = new Color(color.hex),
+		textColor = (colorInstance.contrastRatio(new Color("black") ) > 4) ? "black" : "white";
+		result = '<div style="background:'+color.hex+'; color: '+textColor+'">';
+		result += "<h3>"+color.name+"</h3>";
+		result += "<p>"+color.hex+"</p>";
+		return result;
+	}
+}
