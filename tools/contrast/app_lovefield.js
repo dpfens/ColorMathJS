@@ -1,15 +1,61 @@
-function dbProvider() {
+var get = {
+	JSON: function(url, cb) {
+		var oReq = new XMLHttpRequest();
+		oReq.onload = function(e) {
+			var response = oReq.responseText;
+			cb(JSON.parse(response));
+		}
+		oReq.open("GET", url);
+		oReq.responseType = "text";
+		oReq.send();
+	}
+},
+promise = {
+	JSON: function(url) {
+		// Return a new promise.
+		return new Promise(function(resolve, reject) {
+			// Do the usual XHR stuff
+			var req = new XMLHttpRequest();
+			req.open('GET', url);
+
+			req.onload = function() {
+				// This is called even on 404 etc
+				// so check the status
+				if (req.status == 200) {
+					// Resolve the promise with the response text
+					resolve(JSON.parse(req.response));
+				}
+				else {
+					// Otherwise reject with the status text
+					// which will hopefully be a meaningful error
+					reject(Error(req.statusText));
+				}
+			};
+
+			// Handle network errors
+			req.onerror = function() {
+				reject(Error("Network Error"));
+			};
+
+			// Make the request
+			req.send();
+		});
+	}
+}
+
+
+function DBProvider() {
 	this._db = null;
 	this._schema = null;
 	this._tables = {};
 }
 	
-dbProvider.prototype._buildSchema = function() {
+DBProvider.prototype._buildSchema = function() {
 	var sB = lf.schema.create('colors', 1);
 
 	// Build Color table
 	sB.createTable('Color')
-	    .addColumn('id', lf.Type.STRING)
+	    .addColumn('id', lf.Type.INTEGER)
 	    .addColumn('hex', lf.Type.STRING)
 	    .addColumn('opacity', lf.Type.Number)
 	    .addColumn('name', lf.Type.STRING)
@@ -21,7 +67,7 @@ dbProvider.prototype._buildSchema = function() {
 	
 	// Build Palette table
 	sB.createTable('Palette')
-	    .addColumn('id', lf.Type.STRING)
+	    .addColumn('id', lf.Type.INTEGER)
 	    .addColumn('name', lf.Type.STRING)
 	    .addColumn('description', lf.Type.STRING)
 	    .addUnique('uniqName', ['name'])
@@ -30,8 +76,18 @@ dbProvider.prototype._buildSchema = function() {
 	// Build many-to-many ColorPalette table
 	sB.createTable('ColorPalette')
 	    .addColumn('id', lf.Type.STRING)
-	    .addForeignKey('palette_id', lf.Type.STRING)
-	    .addForeignKey('color_id', lf.Type.STRING)
+            .addColumn('palette_id', lf.Type.INTEGER)
+            .addColumn('color_id', lf.Type.INTEGER)
+	    .addForeignKey('fk_paletteId', {
+		local: 'palette_id',
+		ref: 'Palette.id',
+		action: lf.ConstraintAction.CASCADE
+            })
+            .addForeignKey('fk_colorId', {
+		local: 'color_id',
+		ref: 'Color.id',
+		action: lf.ConstraintAction.CASCADE
+            })
 	    .addIndex('idxPaletteIdAsc', ['palette_id'], false, lf.Order.ASC)
 	    .addPrimaryKey(['id']);
 
@@ -61,36 +117,50 @@ dbProvider.prototype._buildSchema = function() {
 	* .where(Color.name.match(/(.+)?red(.+)?/g) )
 	**/
 	
-	return sB;
+	this._schema = sB;
 }
 
-dbProvider.prototype._getDBConnection = function() {
-	if (this._db != null) {
-		return this._db;
+DBProvider.prototype.connect = function(cb) {
+	if (this._schema === null) {
+		this._buildSchema();
 	}
 
-	return this.buildSchema_().connect(connectOptions).then(
-		function(db) {
-		this.db_ = db;
-		this.onConnected_();
-		return db;
-		}.bind(this));
+	// return Then-able
+	if(this._db) {
+		cb(this._db);
+	}
+
+	
+	this._schema.connect().then(function(db) {
+		this._db = db;
+		cb(this._db);
+
+	});
 }
 
-dbProvider.prototype.onConnected_ = function() {
-	this._color = this.db_.getSchema().table('Color');
-	this.hd_ = this.db_.getSchema().table('Palette');
-
-	var si = this._color,
-	hd = this.hd_;
-
-	// Creating a two parametrized queries. Parameters will be bound to actual
-	// values before executing such queries.
-	this.stockClosingPricesQuery_ = this.db_.
-	select().
-	from(hd).
-	where(lf.op.and(
-		hd.Date.between(lf.bind(0), lf.bind(1)),
-		hd.Stock.eq(lf.bind(2)))).
-		orderBy(hd.Date, lf.Order.ASC);
-};
+var connection = new DBProvider();
+get.JSON('/ColorMathJS/data/extended_hex.json', function(data) {
+	connection.connect(function(db) {
+		var colorTable = db.getSchema().table("Color"),
+		rows = [];
+		for(var i =0; i<data.length; i++) {
+			var colorRow = data[i],
+			row = colorTable.createRow({
+				id: i+1,
+				name: colorRow.name,
+				hex: colorRow.hex,
+				opacity: 1,
+				userDefined: false,
+				time_stamp: new Date()
+			});
+			rows.push(row);
+		}
+		return db.insertOrReplace().into(colorTable).values(rows).exec()
+		.then(function() {
+			return db.select().from(colorTable).where(colorTable.userDefined.eq(false)).exec();	
+		}).then(function(results) {
+			console.log(results);
+		})
+		
+	});
+});
