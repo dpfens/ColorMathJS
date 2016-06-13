@@ -197,10 +197,21 @@ function listColors(colors) {
 	return results;
 
 	function formatColor(color) {
-		var colorInstance = new Color(color.hex),
+		
+		var textColors = calculateTextColors(color.hex);
+		
+		result = '<div class="card" data-hex="'+color.hex+'" style="background:'+color.hex+';">';
+		result += '<h3 class="title" style="color: '+textColors.large.color+'">'+color.name+' (' + textColors.large.standard +') </h3>';
+		result += '<p style="color:'+textColors.normal.color+'">'+color.hex+' (' + textColors.normal.standard +') </p>';
+		result += '</div>';
+		return result;
+	}
+	
+	function calculateTextColors(hex) {
+		var colorInstance = new Color(hex),
 		contrastRatios = {
-			black: colorInstance.contrastRatio(new Color("black") ),
-			white: colorInstance.contrastRatio(new Color("white") )
+			black: colorInstance.contrastRatio(new Color("black") ) || 0,
+			white: colorInstance.contrastRatio(new Color("white") ) || 0
 		},
 		initialContrastRatio = colorInstance.contrastRatio(new Color("black") ),
 		largeTextColor = (contrastRatios.white < contrastRatios.black) ? "black" : "white",
@@ -213,13 +224,10 @@ function listColors(colors) {
 		normalContrastRatio = colorInstance.contrastRatio(normalColorInstance),
 		largeStandard = (largeContrastRatio > 4.5) ? "AAA" : (largeContrastRatio > 3) ? "AA" : "Not Met",
 		normalStandard = (normalContrastRatio > 7) ? "AAA" : (normalContrastRatio > 4.5) ? "AA" : "Not Met";
-				
 		
-		
-		result = '<div class="card" data-hex="'+color.hex+'" style="background:'+color.hex+';">';
-		result += '<h3 class="title" style="color: '+largeTextColor+'">'+color.name+' (' + largeStandard +') </h3>';
-		result += '<p style="color:'+normalTextColor+'">'+color.hex+' (' + normalStandard +') </p>';
-		result += '</div>';
-		return result;
+		return {
+			large: { color: largeTextColor, standard: largeStandard },
+			normal: { color: normalTextColor, standard: normalStandard },
+		};
 	}
 }
