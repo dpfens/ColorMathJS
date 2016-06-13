@@ -60,9 +60,9 @@ DBProvider.prototype._buildSchema = function() {
 	    .addColumn('opacity', lf.Type.Number)
 	    .addColumn('name', lf.Type.STRING)
 	    .addColumn('userDefined', lf.Type.BOOLEAN)
+	    .addColumn('source', lf.Type.STRING)
 	    .addColumn('time_stamp', lf.Type.DATE_TIME)
-	    .addUnique('uniqHex', ['hex'])
-	    .addUnique('uniqName', ['name'])
+	    .addIndex('idxNameAsc', ['name'], false, lf.Order.ASC)
 	    .addPrimaryKey(['id']);
 	
 	// Build Palette table
@@ -138,8 +138,11 @@ DBProvider.prototype.connect = function(cb) {
 	});
 }
 
-var connection = new DBProvider();
-get.JSON('/ColorMathJS/data/extended_hex.json', function(data) {
+var connection = new DBProvider(),
+colorContainer = document.getElementById("color-list");
+
+
+get.JSON('/ColorMathJS/data/wikipedia-colors.json', function(data) {
 	connection.connect(function(db) {
 		var colorTable = db.getSchema().table("Color"),
 		rows = [];
@@ -147,9 +150,10 @@ get.JSON('/ColorMathJS/data/extended_hex.json', function(data) {
 			var colorRow = data[i],
 			row = colorTable.createRow({
 				id: i+1,
-				name: colorRow.name,
-				hex: colorRow.hex,
+				name: colorRow.Name,
+				hex: colorRow.Hex,
 				opacity: 1,
+				source: colorRow.wikipedia,
 				userDefined: false,
 				time_stamp: new Date()
 			});
@@ -157,21 +161,17 @@ get.JSON('/ColorMathJS/data/extended_hex.json', function(data) {
 		}
 		return db.insertOrReplace().into(colorTable).values(rows).exec()
 		.then(function() {
-			return db.select().from(colorTable).where(colorTable.userDefined.eq(false)).exec();	
-		}).then(function(results) {
-			var content = listColors(results);
-		})
+			return db.select().from(colorTable).orderBy(colorTable.hex, lf.Order.ASC).where(colorTable.userDefined.eq(false)).exec();	
+		});
 		
 	});
 });
 
 function listColors(colors) {
 	var color, row, results="";
-	console.log(colors.length);
 	for (var i =0; i<colors.length; i++) {
 		row = colors[i],
 		color = formatColor(row);
-		console.log(color);
 		results += color;
 	}
 	return results;
@@ -179,9 +179,10 @@ function listColors(colors) {
 	function formatColor(color) {
 		var colorInstance = new Color(color.hex),
 		textColor = (colorInstance.contrastRatio(new Color("black") ) > 4) ? "black" : "white";
-		result = '<div style="background:'+color.hex+'; color: '+textColor+'">';
-		result += "<h3>"+color.name+"</h3>";
-		result += "<p>"+color.hex+"</p>";
+		result = '<div class="card" style="background:'+color.hex+'; color: '+textColor+'">';
+		result += '<h3 class="title" style="color: '+textColor+'">'+color.name+'</h3>';
+		result += '<p>'+color.hex+'</p>';
+		result += '</div>';
 		return result;
 	}
 }
