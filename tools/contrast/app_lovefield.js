@@ -142,10 +142,15 @@ var connection = new DBProvider(),
 colorContainer = document.getElementById("color-list");
 
 
-get.JSON('/ColorMathJS/data/wikipedia-colors.json', function(data) {
-	connection.connect(function(db) {
-		var colorTable = db.getSchema().table("Color"),
-		rows = [];
+connection.connect(function(db) {
+	var colorTable = db.getSchema().table("Color"),
+	paletteTable =  db.getSchema().table("Palette"),
+	colorPaletteTable =  db.getSchema().table("ColorPalette");
+	
+	
+	
+	get.JSON('/ColorMathJS/data/wikipedia-colors.json', function(data) {
+		var rows = [];
 		for(var i =0; i<data.length; i++) {
 			var colorRow = data[i],
 			row = colorTable.createRow({
@@ -159,13 +164,28 @@ get.JSON('/ColorMathJS/data/wikipedia-colors.json', function(data) {
 			});
 			rows.push(row);
 		}
+		// Add rows of colors into Color table
 		return db.insertOrReplace().into(colorTable).values(rows).exec()
 		.then(function() {
+			// Select all system-defined colors
 			return db.select().from(colorTable).orderBy(colorTable.hex, lf.Order.ASC).where(colorTable.userDefined.eq(false)).exec();	
-		});
+		})
+		.then(function(systemColors) {
+			var formattedColors = listColors(systemColors);;
+			showColors(formattedColors);
+		})
+		
 		
 	});
 });
+
+function showColors(colorHTML) {
+	colorContainer.innerHTML = colorHTML;
+}
+
+function activateCards() {
+	
+}
 
 function listColors(colors) {
 	var color, row, results="";
@@ -178,10 +198,27 @@ function listColors(colors) {
 
 	function formatColor(color) {
 		var colorInstance = new Color(color.hex),
-		textColor = (colorInstance.contrastRatio(new Color("black") ) > 4) ? "black" : "white";
-		result = '<div class="card" style="background:'+color.hex+'; color: '+textColor+'">';
-		result += '<h3 class="title" style="color: '+textColor+'">'+color.name+'</h3>';
-		result += '<p>'+color.hex+'</p>';
+		contrastRatios = {
+			black: colorInstance.contrastRatio(new Color("black") ),
+			white: colorInstance.contrastRatio(new Color("white") )
+		},
+		initialContrastRatio = colorInstance.contrastRatio(new Color("black") ),
+		largeTextColor = (contrastRatios.white < contrastRatios.black) ? "black" : "white",
+		normalTextColor = (contrastRatios.white < contrastRatios.black) ? "black" : "white",
+				
+		largeColorInstance = new Color(largeTextColor),
+		normalColorInstance = new Color(normalTextColor),
+		
+		largeContrastRatio = colorInstance.contrastRatio(largeColorInstance),
+		normalContrastRatio = colorInstance.contrastRatio(normalColorInstance),
+		largeStandard = (largeContrastRatio > 4.5) ? "AAA" : (largeContrastRatio > 3) ? "AA" : "Not Met",
+		normalStandard = (normalContrastRatio > 7) ? "AAA" : (normalContrastRatio > 4.5) ? "AA" : "Not Met";
+				
+		
+		
+		result = '<div class="card" data-hex="'+color.hex+'" style="background:'+color.hex+';">';
+		result += '<h3 class="title" style="color: '+largeTextColor+'">'+color.name+' (' + largeStandard +') </h3>';
+		result += '<p style="color:'+normalTextColor+'">'+color.hex+' (' + normalStandard +') </p>';
 		result += '</div>';
 		return result;
 	}
