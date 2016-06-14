@@ -17,22 +17,57 @@
 		<section ng-app="app" ng-controller="rootController">
 			
 			<form class="small-12 medium-4 columns">
-				<label>Background</label><input type="color" ng-model="color.background" ng-change="calculateRatio()" />
+				<label>Background</label><input type="color" ng-model="color.background" ng-change="calculateRatio()" id="background-picker" />
 				<label>Text</label><input type="color" ng-model="color.text" ng-change="calculateRatio()" />
 			</form>
+
+			<div class="card" id="custom-card">
+				<h3 class="title" id="custom-large"></h3>
+				<p class="text" id="custom-normal"></p>
+			</div>
 			
-			<pre class="language-javascript small-12 medium-8 columns" ng-controller="outputController"><code><span class="token keyword">var</span> textColor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Color</span><span class="token punctuation">(</span><span class="token string">"{{color.text}}"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-backgroundColor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Color</span><span class="token punctuation">(</span><span class="token string">"{{color.background}}"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-ratio <span class="token operator">=</span> textColor<span class="token punctuation">.</span><span class="token function">contrastRatio</span><span class="token punctuation">(</span>backgroundColor<span class="token punctuation">)</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>ratio<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// {{color.ratio}}</span></code></pre>
+			<pre class="small-12 columns"><code class="language-javascript">var backgroundHex = "#123456",
+textColors = calculateTextColors(backgroundHex);
+
+// Set large text to the calculate value for large text
+largeText.style.color = textColors.large.color;
+
+// Set small text to the calculate value for large text
+normalText.style.color = textColors.normal.color;
+
+function calculateTextColors(hex) {
+	var colorInstance = new Color(hex),
+	contrastRatios = {
+		black: colorInstance.contrastRatio(new Color("black") ) || 0,
+		white: colorInstance.contrastRatio(new Color("white") ) || 0
+	},
+	initialContrastRatio = colorInstance.contrastRatio(new Color("black") ),
+	largeTextColor = (contrastRatios.white < contrastRatios.black) ? "black" : "white",
+	normalTextColor = (contrastRatios.white < contrastRatios.black) ? "black" : "white",
+			
+	largeColorInstance = new Color(largeTextColor),
+	normalColorInstance = new Color(normalTextColor),
+	
+	largeContrastRatio = colorInstance.contrastRatio(largeColorInstance),
+	normalContrastRatio = colorInstance.contrastRatio(normalColorInstance),
+	largeStandard = (largeContrastRatio > 4.5) ? "AAA" : (largeContrastRatio > 3) ? "AA" : "Not Met",
+	normalStandard = (normalContrastRatio > 7) ? "AAA" : (normalContrastRatio > 4.5) ? "AA" : "Not Met";
+		
+	return {
+		large: { color: largeTextColor, standard: largeStandard },
+		normal: { color: normalTextColor, standard: normalStandard },
+	};
+}</code></pre>
+
+<div id="color-list"></div>
 		
 		</section>
 	</body>
+	<script src="/ColorMathJS/js/lib/prism.js"></script>
 	<script src="/ColorMathJS/js/polyfill/promise.min.js"></script>
 	<script src="/ColorMathJS/js/lib/jquery-2.1.4.min.js"></script>
 	<script src="/ColorMathJS/js/lib/foundation.min.js"></script>
 	<script src="/ColorMathJS/js/lib/lovefield.min.js"></script>
-        <script src="/ColorMathJS/js/lib/angular.min.js"></script>
 	<script src="/ColorMathJS/colormath.js"></script>
-	<script src="app.js"></script>
+	<script src="app_lovefield.js"></script>
 </html>
