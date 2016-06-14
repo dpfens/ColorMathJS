@@ -100,3 +100,8 @@
 .reunion.card .title a {
   text-decoration: none;
 }
+
+code {
+	border: none;
+	background: none;
+}
