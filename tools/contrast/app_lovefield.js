@@ -139,7 +139,9 @@ DBProvider.prototype.connect = function(cb) {
 }
 
 var connection = new DBProvider(),
-colorContainer = document.getElementById("color-list");
+colorContainer = document.getElementById("color-list"),
+backgroundPicker = document.getElementById("background-picker");
+backgroundPicker.onchange = onChangeHandler;
 
 
 connection.connect(function(db) {
@@ -207,27 +209,44 @@ function listColors(colors) {
 		return result;
 	}
 	
-	function calculateTextColors(hex) {
-		var colorInstance = new Color(hex),
-		contrastRatios = {
-			black: colorInstance.contrastRatio(new Color("black") ) || 0,
-			white: colorInstance.contrastRatio(new Color("white") ) || 0
-		},
-		initialContrastRatio = colorInstance.contrastRatio(new Color("black") ),
-		largeTextColor = (contrastRatios.white < contrastRatios.black) ? "black" : "white",
-		normalTextColor = (contrastRatios.white < contrastRatios.black) ? "black" : "white",
-				
-		largeColorInstance = new Color(largeTextColor),
-		normalColorInstance = new Color(normalTextColor),
+}
+
+function onChangeHandler(e) {
+	var backgroundHex = e.target.value.toUpperCase(),
+	customCard = document.getElementById("custom-card"),
+	customTitle = document.getElementById("custom-large"),
+	customText = document.getElementById("custom-normal");	
+	
+	textColors = calculateTextColors(backgroundHex);
+	customCard.style.background = backgroundHex;
+
+	customTitle.style.color = textColors.large.color;
+	customTitle.innerHTML = backgroundHex + " (" + textColors.large.standard + ")";
+
+	customText.style.color = textColors.normal.color;
+	customText.innerHTML = backgroundHex + " (" + textColors.normal.standard + ")";
+}
+
+function calculateTextColors(hex) {
+	var colorInstance = new Color(hex),
+	contrastRatios = {
+		black: colorInstance.contrastRatio(new Color("black") ) || 0,
+		white: colorInstance.contrastRatio(new Color("white") ) || 0
+	},
+	initialContrastRatio = colorInstance.contrastRatio(new Color("black") ),
+	largeTextColor = (contrastRatios.white < contrastRatios.black) ? "black" : "white",
+	normalTextColor = (contrastRatios.white < contrastRatios.black) ? "black" : "white",
+			
+	largeColorInstance = new Color(largeTextColor),
+	normalColorInstance = new Color(normalTextColor),
+	
+	largeContrastRatio = colorInstance.contrastRatio(largeColorInstance),
+	normalContrastRatio = colorInstance.contrastRatio(normalColorInstance),
+	largeStandard = (largeContrastRatio > 4.5) ? "AAA" : (largeContrastRatio > 3) ? "AA" : "Not Met",
+	normalStandard = (normalContrastRatio > 7) ? "AAA" : (normalContrastRatio > 4.5) ? "AA" : "Not Met";
 		
-		largeContrastRatio = colorInstance.contrastRatio(largeColorInstance),
-		normalContrastRatio = colorInstance.contrastRatio(normalColorInstance),
-		largeStandard = (largeContrastRatio > 4.5) ? "AAA" : (largeContrastRatio > 3) ? "AA" : "Not Met",
-		normalStandard = (normalContrastRatio > 7) ? "AAA" : (normalContrastRatio > 4.5) ? "AA" : "Not Met";
-		
-		return {
-			large: { color: largeTextColor, standard: largeStandard },
-			normal: { color: normalTextColor, standard: normalStandard },
-		};
-	}
+	return {
+		large: { color: largeTextColor, standard: largeStandard },
+		normal: { color: normalTextColor, standard: normalStandard },
+	};
 }
